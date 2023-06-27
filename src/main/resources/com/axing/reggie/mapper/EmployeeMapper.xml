@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axing.reggie.mapper.EmployeeMapper">
+
+    <insert id="addEmployee">
+        insert into employee(id,name,username,password,phone,sex,id_number,create_time,Update_time,create_user,update_user)
+        values (#{id},#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+
+    <update id="updateById">
+        update employee
+        set
+            status=#{status},
+            update_user=#{updateUser},
+            update_time=#{updateTime}
+            <if test="username != null and username != ''">
+                ,username=#{username},
+                name=#{name},
+                phone=#{phone},
+                sex=#{sex},
+                id_number=#{idNumber}
+            </if>
+        where id=#{id}
+    </update>
+
+    <select id="login" resultType="com.axing.reggie.domain.Employee">
+        select
+            id,name,username,password,phone,sex,id_number,status,create_time,update_time,create_user,update_user
+        from
+            employee
+        where
+            username=#{username}
+
+    </select>
+
+    <select id="getTotal" resultType="java.lang.Integer">
+        select count(*)
+        from employee
+        <where>
+            <if test="name != null">
+                name like '%' #{name} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getEmployeeListByCondition" resultType="com.axing.reggie.domain.Employee">
+        select
+            id,
+            name,
+            username,
+            password,
+            phone,
+            sex,
+            id_number,
+            status,
+            create_time,
+            update_time,
+            create_user,
+            update_user
+        from employee
+        <where>
+            <if test="name != null">
+                name like '%' #{name} '%'
+            </if>
+        </where>
+        order by update_time desc
+        limit #{startNum},#{pageSize}
+    </select>
+
+    <select id="getEmployeeById" resultType="com.axing.reggie.domain.Employee">
+        select id,username,name,phone,sex,id_number,status
+        from employee
+        where id=#{id}
+    </select>
+
+
+</mapper>

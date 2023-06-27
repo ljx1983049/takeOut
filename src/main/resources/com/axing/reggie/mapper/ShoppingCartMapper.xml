@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axing.reggie.mapper.ShoppingCartMapper">
+
+    <insert id="saveShoppingCart">
+        insert into shopping_cart values (
+                                            #{id},
+                                            #{name},
+                                            #{image},
+                                            #{userId},
+                                            #{dishId},
+                                            #{setmealId},
+                                            #{dishFlavor},
+                                            #{number},
+                                            #{amount},
+                                            #{createTime}
+                                        )
+    </insert>
+
+    <insert id="addListShoppingCart">
+        insert into shopping_cart
+            values
+                <foreach collection="list" item="sc" separator=",">
+                    (
+                        #{sc.id},
+                        #{sc.name},
+                        #{sc.image},
+                        #{sc.userId},
+                        #{sc.dishId},
+                        #{sc.setmealId},
+                        #{sc.dishFlavor},
+                        #{sc.number},
+                        #{sc.amount},
+                        #{sc.createTime}
+                    )
+                </foreach>
+
+    </insert>
+
+    <update id="updateShoppingCartNumber">
+        update shopping_cart set number=#{number} where id=#{id}
+    </update>
+
+    <update id="subByUserIdAndDishIyOrSermealId">
+        update shopping_cart set number=(number-1)
+        where user_id=#{userId}
+        and
+            <if test="dishId != null and dishId != ''">
+                dish_id=#{dishId}
+            </if>
+            <if test="setmealId != null and setmealId != ''">
+                setmeal_id=#{setmealId}
+            </if>
+    </update>
+
+    <delete id="cleanByUserId">
+        delete from shopping_cart where user_id=#{userId}
+    </delete>
+
+    <delete id="deleteShoppingCartById">
+        delete from shopping_cart where id=#{id}
+    </delete>
+
+    <select id="getShoppingCartByUserIdAndDishIdOrSetmealId" resultType="com.axing.reggie.domain.ShoppingCart">
+        select * from shopping_cart
+        where user_id=#{userId} and
+              <if test="dishId != null and dishId != '' ">
+                  dish_id=#{dishId}
+              </if>
+              <if test="setmealId != null and setmealId != '' ">
+                  setmeal_id=#{setmealId}
+              </if>
+    </select>
+
+    <select id="getListByUserId" resultType="com.axing.reggie.domain.ShoppingCart">
+        select * from shopping_cart where user_id=#{userId} order by create_time
+    </select>
+
+</mapper>

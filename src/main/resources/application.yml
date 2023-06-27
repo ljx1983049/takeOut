@@ -1,0 +1,34 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_reggie
+    username: root
+    password: SQL198
+  redis:
+    host: localhost
+    port: 6379
+#    password: root@123456
+    database: 0
+  cache:
+    redis:
+      time-to-live: 216000000 #设置缓存有效期 （毫秒） 60小时
+  #指定应用的名称（不是必须的，不配置默认是项目名）
+  application:
+    name: reggie_take_out
+mybatis-plus:
+  configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: assign_id
+
+reggie:
+  #文件上传的路径
+  path: C:\Users\lj兴灬\Pictures\Saved Pictures\
+#  path: D:\imag\
+#  path: /usr/local/img/  #配置linux

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axing.reggie.mapper.AddressBookMapper">
+
+    <insert id="saveAddressBook">
+        insert into address_book(
+            id,
+            user_id,
+            consignee,
+            sex,
+            phone,
+            province_code,
+            province_name,
+            city_code,
+            city_name,
+            district_code,
+            district_name,
+            detail,
+            label,
+            create_time,
+            update_time,
+            create_user,
+            update_user
+        )values (
+                            #{id},
+                            #{userId},
+                            #{consignee},
+                            #{sex},
+                            #{phone},
+                            #{provinceCode},
+                            #{provinceName},
+                            #{cityCode},
+                            #{cityName},
+                            #{districtCode},
+                            #{districtName},
+                            #{detail},
+                            #{label},
+                            #{createTime},
+                            #{updateTime},
+                            #{createUser},
+                            #{updateUser}
+                        )
+    </insert>
+
+    <update id="setAddressNoDefault">
+        update address_book set is_default=0 where user_id=#{userId}
+    </update>
+    <update id="setAddressDefault">
+        update address_book set is_default=1 where id=#{id}
+    </update>
+
+    <update id="updateAddressBookById">
+        update address_book
+        set
+            consignee=#{consignee},
+            sex=#{sex},
+            phone=#{phone},
+            province_code=#{provinceCode},
+            province_name=#{provinceName},
+            city_code=#{cityCode},
+            city_name=#{cityName},
+            district_code=#{districtCode},
+            district_name=#{districtName},
+            detail=#{detail},
+            label=#{label},
+            update_time=#{updateTime},
+            update_user=#{updateUser}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteAddressById">
+        delete from address_book where id=#{id}
+    </delete>
+
+    <select id="getAddressBookList" resultType="com.axing.reggie.domain.AddressBook">
+        select * from address_book where user_id=#{userId}
+    </select>
+
+    <select id="getAddressBookById" resultType="com.axing.reggie.domain.AddressBook">
+        select * from address_book where id=#{id}
+    </select>
+
+    <select id="getDefaultByUserId" resultType="com.axing.reggie.domain.AddressBook">
+        select * from address_book where user_id=#{userId} 
+        <if test="isDefault != null and isDefault != ''">
+            and is_default=1
+        </if>
+    </select>
+
+</mapper>

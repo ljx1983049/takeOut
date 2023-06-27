@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axing.reggie.mapper.CategoryMapper">
+
+    <insert id="save">
+        INSERT INTO category ( id, type, name, sort, create_time, update_time, create_user, update_user )
+        VALUES ( #{id},#{type},#{name},#{sort},#{createTime},#{updateTime},#{createUser},#{updateUser} )
+    </insert>
+
+    <delete id="deleteById">
+        delete from category where id=#{id}
+    </delete>
+
+    <update id="updateById">
+        update category set name=#{name},sort=#{sort},update_user=#{updateUser},update_time=#{updateTime} where id=#{id}
+    </update>
+
+    <select id="getTotal" resultType="java.lang.Integer">
+        select count(*) from category
+    </select>
+
+    <select id="getPageList" resultType="com.axing.reggie.domain.Category">
+        select
+            id,
+            type,
+            name,
+            sort,
+            create_time,
+            update_time,
+            create_user,
+            update_user
+        from
+            category
+        order by sort asc
+        limit #{startNum},#{pageSize}
+    </select>
+
+    <select id="getListByType" resultType="com.axing.reggie.domain.Category">
+        select
+            id,
+            type,
+            name,
+            sort,
+            create_time,
+            update_time,
+            create_user,
+            update_user
+        from category
+        <where>
+            <if test="type != null and type != ''">
+                type=#{type}
+            </if>
+        </where>
+        order by sort asc,update_time desc
+    </select>
+
+    <select id="getNameById" resultType="java.lang.String">
+        select name from category where id=#{categoryId}
+    </select>
+
+
+</mapper>

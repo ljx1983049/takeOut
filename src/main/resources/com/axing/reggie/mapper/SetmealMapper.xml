@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axing.reggie.mapper.SetmealMapper">
+
+    <insert id="save">
+        insert into setmeal(
+            id,
+            category_id,
+            name,
+            price,
+            status,
+            code,
+            description,
+            image,
+            create_time,
+            update_time,
+            create_user,
+            update_user
+        )
+        values
+               (
+                #{id},#{categoryId},#{name},#{price},#{status},#{code},#{description},#{image},#{createTime},#{updateTime},#{createUser},#{updateUser}
+                )
+    </insert>
+
+    <update id="updateSetmealStatusByIds">
+        update setmeal set status=#{status} where id in
+        <foreach collection="list" item="ids" separator="," open="(" close=")">
+            #{ids}
+        </foreach>
+    </update>
+
+    <update id="updateSetmealById">
+        update setmeal set
+            category_id=#{categoryId},
+            name=#{name},
+            price=#{price},
+            status=#{status},
+            code=#{code},
+            description=#{description},
+            image=#{image},
+            update_time=#{updateTime},
+            update_user=#{updateUser}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteByIds">
+        delete from setmeal where id in
+        <foreach collection="list" item="ids" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="countByCategoryId" resultType="java.lang.Integer">
+        select count(*) from setmeal where category_id=#{id}
+    </select>
+
+    <select id="getPageListByCondition" resultType="com.axing.reggie.dto.SetmealDto">
+        select * from setmeal
+        <where>
+            <if test="name != null and name !=''">
+                name like '%' #{name} '%'
+            </if>
+        </where>
+        order by update_time desc
+        limit #{startNum},#{pageSize}
+    </select>
+
+    <select id="getTotal" resultType="java.lang.Integer">
+        select count(*) from setmeal
+        <where>
+            <if test="name != null and name !='' ">
+                name like '%' #{name} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getCountByStatus" resultType="java.lang.Integer">
+        select count(*)
+        from setmeal
+        where id in
+        <foreach collection="list" item="ids" separator="," open="(" close=")">
+            #{ids}
+        </foreach>
+        and status=1
+    </select>
+
+    <select id="getSetmealNameById" resultType="java.lang.String">
+        select name from setmeal where id in
+        <foreach collection="list" item="ids" separator="," open="(" close=")">
+            #{ids}
+        </foreach>
+    </select>
+
+    <select id="getSetmealById" resultType="com.axing.reggie.domain.Setmeal">
+        select * from setmeal where id=#{id}
+    </select>
+
+    <select id="getSetmealListByCategoryId" resultType="com.axing.reggie.dto.SetmealDto">
+        select * from setmeal
+            <where>
+                category_id=#{categoryId}
+                <if test="status != null and status != ''">
+                    and status=#{status}
+                </if>
+            </where>
+    </select>
+
+</mapper>
